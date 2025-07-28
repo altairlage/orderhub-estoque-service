@@ -1,0 +1,14 @@
+br\com\orderhub\estoque_service\adapter\controller\EstoqueApiController.class
+br\com\orderhub\estoque_service\adapter\persistence\EstoqueEntity.class
+br\com\orderhub\estoque_service\adapter\mapper\EstoqueEntityMapper.class
+br\com\orderhub\estoque_service\adapter\persistence\EstoqueRepository.class
+br\com\orderhub\estoque_service\adapter\dto\EstoqueApiResponseDto.class
+br\com\orderhub\estoque_service\adapter\mapper\EstoqueApiDtoMapper.class
+br\com\orderhub\estoque_service\adapter\configuration\EstoqueControllerConfig.class
+br\com\orderhub\estoque_service\adapter\dto\EstoqueApiRequestDto.class
+br\com\orderhub\estoque_service\adapter\messaging\listener\PedidoCriadoEvent.class
+br\com\orderhub\estoque_service\adapter\persistence\EstoqueEntity$EstoqueEntityBuilder.class
+br\com\orderhub\estoque_service\adapter\api\handler\OrderhubExceptionHandler.class
+br\com\orderhub\estoque_service\adapter\messaging\listener\PedidoCriadoListener.class
+br\com\orderhub\estoque_service\EstoqueServiceApplication.class
+br\com\orderhub\estoque_service\adapter\gateway\EstoqueRepositoryJpaGatewayImpl.class
