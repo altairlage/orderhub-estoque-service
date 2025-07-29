@@ -1,4 +1,6 @@
-/*package br.com.orderhub.estoque_service;
+package br.com.orderhub.estoque_service;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,5 +23,6 @@ class EstoqueServiceApplicationTest {
 
     @Test
     void contextLoads() {
+        assertTrue(true);
     }
-}*/
+}

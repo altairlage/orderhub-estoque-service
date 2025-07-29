@@ -1,7 +1,0 @@
-C:\Users\prisc\OneDrive\Área de Trabalho\orderhub\orderhub-estoque-service\src\test\java\br\com\orderhub\estoque_service\adapter\controller\EstoqueApiControllerTest.java
-C:\Users\prisc\OneDrive\Área de Trabalho\orderhub\orderhub-estoque-service\src\test\java\br\com\orderhub\estoque_service\adapter\messaging\listener\PedidoCriadoListenerTest.java
-C:\Users\prisc\OneDrive\Área de Trabalho\orderhub\orderhub-estoque-service\src\test\java\br\com\orderhub\estoque_service\adapter\configuration\EstoqueControllerConfigTest.java
-C:\Users\prisc\OneDrive\Área de Trabalho\orderhub\orderhub-estoque-service\src\test\java\br\com\orderhub\estoque_service\adapter\gateway\EstoqueRepositoryJpaGatewayImplTest.java
-C:\Users\prisc\OneDrive\Área de Trabalho\orderhub\orderhub-estoque-service\src\test\java\br\com\orderhub\estoque_service\adapter\mapper\EstoqueApiDtoMapperTest.java
-C:\Users\prisc\OneDrive\Área de Trabalho\orderhub\orderhub-estoque-service\src\test\java\br\com\orderhub\estoque_service\EstoqueServiceApplicationTest.java
-C:\Users\prisc\OneDrive\Área de Trabalho\orderhub\orderhub-estoque-service\src\test\java\br\com\orderhub\estoque_service\adapter\persistence\EstoqueRepositoryTest.java

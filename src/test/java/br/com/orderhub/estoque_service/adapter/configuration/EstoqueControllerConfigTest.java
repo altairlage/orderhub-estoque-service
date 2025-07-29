@@ -4,6 +4,8 @@ import br.com.orderhub.core.controller.EstoqueController;
 import br.com.orderhub.core.domain.usecases.estoques.BaixarEstoque;
 import br.com.orderhub.core.domain.usecases.estoques.ConsultarEstoquePorSku;
 import br.com.orderhub.core.domain.usecases.estoques.ReporEstoque;
+import br.com.orderhub.core.interfaces.IEstoqueGateway;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,4 +24,26 @@ class EstoqueControllerConfigTest {
 
         assertNotNull(controller);
     }
+
+    @Test
+    void deveInstanciarBaixarEstoqueUseCase() {
+        EstoqueControllerConfig config = new EstoqueControllerConfig();
+        var useCase = config.baixarEstoqueUseCase(mock(IEstoqueGateway.class));
+        assertNotNull(useCase);
+    }
+
+    @Test
+    void deveInstanciarReporEstoqueUseCase() {
+        EstoqueControllerConfig config = new EstoqueControllerConfig();
+        var useCase = config.reporEstoqueUseCase(mock(IEstoqueGateway.class));
+        assertNotNull(useCase);
+    }
+
+    @Test
+    void deveInstanciarConsultarEstoquePorSkuUseCase() {
+        EstoqueControllerConfig config = new EstoqueControllerConfig();
+        var useCase = config.consultarEstoquePorSkuUseCase(mock(IEstoqueGateway.class));
+        assertNotNull(useCase);
+    }
+
 }
