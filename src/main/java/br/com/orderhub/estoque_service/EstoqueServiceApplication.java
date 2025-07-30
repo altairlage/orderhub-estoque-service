@@ -19,7 +19,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  */
 @SpringBootApplication
 @EnableJpaAuditing // NECESSÁRIO para preenchimento automático de datas (@CreatedDate, etc)
-@EnableRabbit
 public class EstoqueServiceApplication {
 
     public static void main(String[] args) {
