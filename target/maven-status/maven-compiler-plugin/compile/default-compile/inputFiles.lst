@@ -1,0 +1,12 @@
+C:\Users\prisc\orderhub\orderhub-estoque-service\src\main\java\br\com\orderhub\estoque_service\adapter\dto\EstoqueApiResponseDto.java
+C:\Users\prisc\orderhub\orderhub-estoque-service\src\main\java\br\com\orderhub\estoque_service\adapter\api\handler\OrderhubExceptionHandler.java
+C:\Users\prisc\orderhub\orderhub-estoque-service\src\main\java\br\com\orderhub\estoque_service\adapter\configuration\EstoqueControllerConfig.java
+C:\Users\prisc\orderhub\orderhub-estoque-service\src\main\java\br\com\orderhub\estoque_service\adapter\persistence\EstoqueEntity.java
+C:\Users\prisc\orderhub\orderhub-estoque-service\src\main\java\br\com\orderhub\estoque_service\adapter\persistence\EstoqueRepository.java
+C:\Users\prisc\orderhub\orderhub-estoque-service\src\main\java\br\com\orderhub\estoque_service\infrastructure\persistence\EstoqueJpaRepository.java
+C:\Users\prisc\orderhub\orderhub-estoque-service\src\main\java\br\com\orderhub\estoque_service\adapter\mapper\EstoqueApiDtoMapper.java
+C:\Users\prisc\orderhub\orderhub-estoque-service\src\main\java\br\com\orderhub\estoque_service\adapter\controller\EstoqueApiController.java
+C:\Users\prisc\orderhub\orderhub-estoque-service\src\main\java\br\com\orderhub\estoque_service\EstoqueServiceApplication.java
+C:\Users\prisc\orderhub\orderhub-estoque-service\src\main\java\br\com\orderhub\estoque_service\adapter\mapper\EstoqueEntityMapper.java
+C:\Users\prisc\orderhub\orderhub-estoque-service\src\main\java\br\com\orderhub\estoque_service\adapter\dto\EstoqueApiRequestDto.java
+C:\Users\prisc\orderhub\orderhub-estoque-service\src\main\java\br\com\orderhub\estoque_service\adapter\gateway\EstoqueRepositoryJpaGatewayImpl.java
