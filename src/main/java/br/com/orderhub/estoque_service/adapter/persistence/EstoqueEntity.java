@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 public class EstoqueEntity {
 
     @Id
-    @Column(nullable = false, unique = true, length = 100)
-    private String sku;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "quantidade_disponivel", nullable = false)
     private Integer quantidadeDisponivel;

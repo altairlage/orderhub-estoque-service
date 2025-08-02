@@ -1,10 +1,10 @@
 package br.com.orderhub.estoque_service.infrastructure.persistence;
 
-import br.com.orderhub.core.domain.entities.Estoque;
+import br.com.orderhub.estoque_service.adapter.persistence.EstoqueEntity; // Importar a entidade correta
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+@Repository
+public interface EstoqueJpaRepository extends JpaRepository<EstoqueEntity, Long> {
 
-public interface EstoqueJpaRepository extends JpaRepository<Estoque, String> {
-    Optional<Estoque> findBySku(String sku);
 }
