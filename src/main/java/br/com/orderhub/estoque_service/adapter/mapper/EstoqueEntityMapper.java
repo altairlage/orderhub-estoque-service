@@ -10,7 +10,7 @@ public class EstoqueEntityMapper {
 
     public Estoque toDomain(EstoqueEntity entity) {
         return Estoque.builder()
-                .sku(entity.getSku())
+                .id(entity.getId())
                 .quantidadeDisponivel(entity.getQuantidadeDisponivel())
                 .criadoEm(entity.getCriadoEm())
                 .atualizadoEm(entity.getAtualizadoEm())
@@ -19,7 +19,7 @@ public class EstoqueEntityMapper {
 
     public EstoqueEntity toEntity(Estoque estoque) {
         return EstoqueEntity.builder()
-                .sku(estoque.getSku())
+                .id(estoque.getId()) 
                 .quantidadeDisponivel(estoque.getQuantidadeDisponivel())
                 .criadoEm(estoque.getCriadoEm())
                 .atualizadoEm(estoque.getAtualizadoEm())

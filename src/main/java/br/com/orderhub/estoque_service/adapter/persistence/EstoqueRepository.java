@@ -5,9 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import br.com.orderhub.estoque_service.adapter.persistence.EstoqueEntity;
 
-import java.util.Optional;
-
 @Repository
-public interface EstoqueRepository extends JpaRepository<EstoqueEntity, String> {
-    Optional<EstoqueEntity> findBySku(String sku);
+public interface EstoqueRepository extends JpaRepository<EstoqueEntity, Long> {
+
+
 }

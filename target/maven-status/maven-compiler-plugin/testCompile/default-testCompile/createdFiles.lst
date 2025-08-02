@@ -1,0 +1,3 @@
+br\com\orderhub\estoque_service\adapter\mapper\EstoqueEntityMapperTest.class
+br\com\orderhub\estoque_service\adapter\controller\EstoqueApiControllerTest.class
+br\com\orderhub\estoque_service\adapter\gateway\EstoqueRepositoryJpaGatewayImplTest.class
