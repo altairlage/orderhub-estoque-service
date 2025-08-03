@@ -32,13 +32,13 @@ class EstoqueApiDtoMapperTest {
                 .criadoEm(agora)
                 .atualizadoEm(agora)
                 .build();
-
+        
         // Act
         EstoqueApiResponseDto responseDto = mapper.toResponse(domain);
-
+        
         // Assert
         assertNotNull(responseDto);
-        assertEquals(domain.getId(), responseDto.id());
+        assertEquals(domain.getId(), responseDto.idProduto()); // <-- ALTERADO
         assertEquals(domain.getQuantidadeDisponivel(), responseDto.quantidadeDisponivel());
         assertEquals(domain.getCriadoEm(), responseDto.criadoEm());
         assertEquals(domain.getAtualizadoEm(), responseDto.atualizadoEm());

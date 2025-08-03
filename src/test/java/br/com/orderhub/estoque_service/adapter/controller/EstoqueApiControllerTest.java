@@ -2,7 +2,6 @@ package br.com.orderhub.estoque_service.adapter.controller;
 
 import br.com.orderhub.core.controller.EstoqueController;
 import br.com.orderhub.core.domain.entities.Estoque;
-import br.com.orderhub.core.dto.pedidos.PedidoDTO;
 import br.com.orderhub.core.exceptions.EstoqueInsuficienteException;
 import br.com.orderhub.core.exceptions.EstoqueNaoEncontradoException;
 import br.com.orderhub.core.exceptions.OrderhubException;
@@ -21,20 +20,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.Validator; // Importação adicionada
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean; // Importação adicionada
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Testes Unitários do EstoqueApiController")
@@ -54,11 +51,9 @@ class EstoqueApiControllerTest {
 
     @BeforeEach
     void setUp() {
-        // CORREÇÃO: Adicionando um validador ao setup do MockMvc
-        Validator validator = new LocalValidatorFactoryBean();
         mockMvc = MockMvcBuilders.standaloneSetup(estoqueApiController)
                 .setControllerAdvice(new OrderhubExceptionHandler())
-                .setValidator(validator) // Linha adicionada para ativar a validação
+                .setValidator(new LocalValidatorFactoryBean())
                 .build();
     }
 
@@ -67,6 +62,7 @@ class EstoqueApiControllerTest {
     void deveBuscarPorIdComSucesso() throws Exception {
         Long estoqueId = 1L;
         Estoque estoque = Estoque.builder().id(estoqueId).quantidadeDisponivel(100).build();
+        // O DTO de resposta agora usa idProduto, mas o construtor é posicional
         EstoqueApiResponseDto responseDto = new EstoqueApiResponseDto(estoqueId, 100, LocalDateTime.now(), LocalDateTime.now());
 
         when(estoqueController.consultarPorId(estoqueId)).thenReturn(estoque);
@@ -74,7 +70,7 @@ class EstoqueApiControllerTest {
 
         mockMvc.perform(get("/api/estoques/{id}", estoqueId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(estoqueId))
+                .andExpect(jsonPath("$.idProduto").value(estoqueId)) // ATUALIZADO
                 .andExpect(jsonPath("$.quantidadeDisponivel").value(100));
     }
 
@@ -87,7 +83,7 @@ class EstoqueApiControllerTest {
         mockMvc.perform(get("/api/estoques/{id}", estoqueId))
                 .andExpect(status().isNotFound());
     }
-    
+
     @Test
     @DisplayName("Deve repor estoque com sucesso")
     void deveReporEstoqueComSucesso() throws Exception {
@@ -103,7 +99,7 @@ class EstoqueApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(estoqueId))
+                .andExpect(jsonPath("$.idProduto").value(estoqueId)) // ATUALIZADO
                 .andExpect(jsonPath("$.quantidadeDisponivel").value(150));
     }
 
@@ -122,32 +118,21 @@ class EstoqueApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(estoqueId))
+                .andExpect(jsonPath("$.idProduto").value(estoqueId)) // ATUALIZADO
                 .andExpect(jsonPath("$.quantidadeDisponivel").value(80));
     }
 
-    @Test
-    @DisplayName("Deve baixar estoque por pedido com sucesso")
-    void deveBaixarEstoquePorPedidoComSucesso() throws Exception {
-        PedidoDTO pedidoDTO = mock(PedidoDTO.class);
-        doNothing().when(estoqueController).baixarEstoquePorPedido(any(PedidoDTO.class));
-
-        mockMvc.perform(post("/api/estoques/baixar-por-pedido")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(pedidoDTO)))
-                .andExpect(status().isNoContent());
-    }
+    // TESTE PARA /baixar-por-pedido FOI REMOVIDO
 
     @Test
     @DisplayName("Deve baixar múltiplos itens de estoque com sucesso")
     void deveBaixarMultiplosComSucesso() throws Exception {
-        // CORREÇÃO: Enviando uma string JSON válida em vez de serializar um mock
-        String jsonContent = "[{\"produtoId\": 1, \"quantidade\": 10}]";
+        String jsonContent = "[{\"produto\": {\"id\": 1}, \"quantidade\": 10}]";
         doNothing().when(estoqueController).baixarEstoqueMultiplo(any());
 
         mockMvc.perform(post("/api/estoques/baixar-multiplos")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonContent)) // Usando a string JSON diretamente
+                        .content(jsonContent))
                 .andExpect(status().isNoContent());
     }
 
@@ -155,13 +140,12 @@ class EstoqueApiControllerTest {
     @DisplayName("Deve retornar 400 Bad Request para quantidade inválida ao repor estoque")
     void deveRetornarBadRequestParaQuantidadeInvalidaAoRepor() throws Exception {
         Long estoqueId = 1L;
-        // O DTO com quantidade 0 deve falhar na validação @Min(1)
         EstoqueApiRequestDto requestDto = new EstoqueApiRequestDto(0);
 
         mockMvc.perform(post("/api/estoques/{id}/repor", estoqueId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
-                .andExpect(status().isBadRequest()); // Agora o validador irá funcionar
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -178,16 +162,13 @@ class EstoqueApiControllerTest {
                 .andExpect(status().isConflict());
     }
 
-        @Test
+    @Test
     @DisplayName("Deve tratar OrderhubException genérica com status 400")
     void deveTratarOrderhubExceptionGenerica() throws Exception {
-        // Arrange
         Long estoqueId = 1L;
-        // Usamos uma subclasse anônima para simular uma OrderhubException genérica
         when(estoqueController.consultarPorId(estoqueId))
                 .thenThrow(new OrderhubException("Erro genérico de negócio") {});
 
-        // Act & Assert
         mockMvc.perform(get("/api/estoques/{id}", estoqueId))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Erro genérico de negócio"));
@@ -196,12 +177,10 @@ class EstoqueApiControllerTest {
     @Test
     @DisplayName("Deve tratar IllegalArgumentException com status 400")
     void deveTratarIllegalArgumentException() throws Exception {
-        // Arrange
         Long estoqueId = 1L;
         when(estoqueController.consultarPorId(estoqueId))
                 .thenThrow(new IllegalArgumentException("Argumento inválido"));
 
-        // Act & Assert
         mockMvc.perform(get("/api/estoques/{id}", estoqueId))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Argumento inválido"));
@@ -210,12 +189,10 @@ class EstoqueApiControllerTest {
     @Test
     @DisplayName("Deve tratar erro genérico com status 500")
     void deveTratarErroGenerico() throws Exception {
-        // Arrange
         Long estoqueId = 1L;
         when(estoqueController.consultarPorId(estoqueId))
                 .thenThrow(new RuntimeException("Erro inesperado no sistema"));
 
-        // Act & Assert
         mockMvc.perform(get("/api/estoques/{id}", estoqueId))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string("Erro interno: Erro inesperado no sistema"));

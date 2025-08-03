@@ -3,7 +3,6 @@ package br.com.orderhub.estoque_service.adapter.controller;
 import br.com.orderhub.core.controller.EstoqueController;
 import br.com.orderhub.core.domain.entities.Estoque;
 import br.com.orderhub.core.dto.estoques.ItemEstoqueDTO;
-import br.com.orderhub.core.dto.pedidos.PedidoDTO;
 import br.com.orderhub.estoque_service.adapter.dto.EstoqueApiRequestDto;
 import br.com.orderhub.estoque_service.adapter.dto.EstoqueApiResponseDto;
 import br.com.orderhub.estoque_service.adapter.mapper.EstoqueApiDtoMapper;
@@ -55,15 +54,6 @@ public class EstoqueApiController {
     public ResponseEntity<EstoqueApiResponseDto> buscarPorId(@PathVariable("id") Long id) {
         Estoque estoque = estoqueController.consultarPorId(id);
         return ResponseEntity.ok(mapper.toResponse(estoque));
-    }
-
-    /**
-     * Endpoint para dar baixa no estoque a partir de um pedido completo.
-     */
-    @PostMapping("/baixar-por-pedido")
-    public ResponseEntity<Void> baixarEstoquePorPedido(@Valid @RequestBody PedidoDTO dto) {
-        estoqueController.baixarEstoquePorPedido(dto);
-        return ResponseEntity.noContent().build();
     }
     
     /**

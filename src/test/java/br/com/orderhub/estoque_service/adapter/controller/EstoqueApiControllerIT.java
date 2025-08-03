@@ -14,7 +14,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -42,7 +41,7 @@ public class EstoqueApiControllerIT {
                 .get("/{id}", 101L)
             .then()
                 .statusCode(200)
-                .body("id", equalTo(101))
+                .body("idProduto", equalTo(101)) // ATUALIZADO
                 .body("quantidadeDisponivel", equalTo(50));
     }
 
@@ -68,8 +67,8 @@ public class EstoqueApiControllerIT {
             .post("/{id}/repor", 101L)
         .then()
             .statusCode(200)
-            .body("id", equalTo(101))
-            .body("quantidadeDisponivel", equalTo(80)); // 50 (inicial) + 30 (repor)
+            .body("idProduto", equalTo(101)) // ATUALIZADO
+            .body("quantidadeDisponivel", equalTo(80));
     }
 
     @Test
@@ -84,14 +83,14 @@ public class EstoqueApiControllerIT {
             .post("/{id}/baixar", 101L)
         .then()
             .statusCode(200)
-            .body("id", equalTo(101))
-            .body("quantidadeDisponivel", equalTo(40)); // 50 (inicial) - 10 (baixar)
+            .body("idProduto", equalTo(101)) // ATUALIZADO
+            .body("quantidadeDisponivel", equalTo(40));
     }
 
     @Test
     @DisplayName("Deve retornar 409 ao tentar baixar estoque insuficiente")
     void deveRetornarConflitoAoBaixarEstoqueInsuficiente() throws Exception {
-        EstoqueApiRequestDto requestDto = new EstoqueApiRequestDto(20); // Tenta baixar 20, mas só tem 10
+        EstoqueApiRequestDto requestDto = new EstoqueApiRequestDto(20);
 
         given()
             .contentType(ContentType.JSON)
@@ -99,6 +98,6 @@ public class EstoqueApiControllerIT {
         .when()
             .post("/{id}/baixar", 102L)
         .then()
-            .statusCode(409); // Conflito de estoque insuficiente
+            .statusCode(409);
     }
 }

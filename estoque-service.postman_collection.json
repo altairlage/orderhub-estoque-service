@@ -21,7 +21,8 @@
 						"estoques",
 						"1"
 					]
-				}
+				},
+				"description": "Busca a quantidade em estoque de um item específico pelo seu ID."
 			},
 			"response": []
 		},
@@ -50,12 +51,13 @@
 						"1",
 						"repor"
 					]
-				}
+				},
+				"description": "Adiciona uma quantidade específica ao estoque de um item."
 			},
 			"response": []
 		},
 		{
-			"name": "Baixar Estoque",
+			"name": "Baixar Estoque por ID",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -79,35 +81,8 @@
 						"1",
 						"baixar"
 					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Baixar Estoque por Pedido",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"idPedido\": 123,\n    \"cliente\": null,\n    \"pagamento\": null,\n    \"listaQtdProdutos\": [\n        {\n            \"Notebook Dell\": 1\n        },\n        {\n            \"Mouse Logitech\": 2\n        }\n    ],\n    \"status\": \"ABERTO\"\n}"
 				},
-				"url": {
-					"raw": "{{base_url}}/api/estoques/baixar-por-pedido",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"api",
-						"estoques",
-						"baixar-por-pedido"
-					]
-				}
+				"description": "Remove uma quantidade específica do estoque de um item."
 			},
 			"response": []
 		},
@@ -135,7 +110,8 @@
 						"estoques",
 						"baixar-multiplos"
 					]
-				}
+				},
+				"description": "Dá baixa em múltiplos itens de estoque de forma atômica."
 			},
 			"response": []
 		}
