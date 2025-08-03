@@ -1,0 +1,150 @@
+{
+	"info": {
+		"_postman_id": "f1e2d3c4-b5a6-4c7d-8e9f-0a1b2c3d4e5f",
+		"name": "OrderHub - Estoque Service",
+		"description": "Coleção de requisições para a API de gerenciamento de estoque do OrderHub.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Consultar Estoque por ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/estoques/1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"estoques",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Repor Estoque",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"quantidade\": 50\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/estoques/1/repor",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"estoques",
+						"1",
+						"repor"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Baixar Estoque",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"quantidade\": 10\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/estoques/1/baixar",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"estoques",
+						"1",
+						"baixar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Baixar Estoque por Pedido",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"idPedido\": 123,\n    \"cliente\": null,\n    \"pagamento\": null,\n    \"listaQtdProdutos\": [\n        {\n            \"Notebook Dell\": 1\n        },\n        {\n            \"Mouse Logitech\": 2\n        }\n    ],\n    \"status\": \"ABERTO\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/estoques/baixar-por-pedido",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"estoques",
+						"baixar-por-pedido"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Baixar Múltiplos Itens",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"produto\": {\n        \"id\": 2\n    },\n    \"quantidade\": 5\n  },\n  {\n    \"produto\": {\n        \"id\": 4\n    },\n    \"quantidade\": 3\n  }\n]"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/estoques/baixar-multiplos",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"estoques",
+						"baixar-multiplos"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8081",
+			"type": "string"
+		}
+	]
+}

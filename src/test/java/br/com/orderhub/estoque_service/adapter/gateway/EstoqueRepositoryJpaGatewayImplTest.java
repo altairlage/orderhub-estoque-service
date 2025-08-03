@@ -103,6 +103,21 @@ class EstoqueRepositoryJpaGatewayImplTest {
     }
 
     @Test
+    @DisplayName("Deve retornar lista vazia ao buscar por uma lista de IDs vazia")
+    void deveRetornarListaVaziaAoBuscarPorListaDeIdsVazia() {
+        // Arrange
+        when(estoqueRepository.findAllById(Collections.emptyList())).thenReturn(Collections.emptyList());
+
+        // Act
+        List<Estoque> resultado = estoqueGateway.buscarPorIds(Collections.emptyList());
+
+        // Assert
+        assertTrue(resultado.isEmpty());
+        verify(estoqueRepository).findAllById(Collections.emptyList());
+        verify(mapper, never()).toDomain(any());
+    }
+
+    @Test
     @DisplayName("Deve salvar um estoque com sucesso")
     void deveSalvarComSucesso() {
         // Arrange
