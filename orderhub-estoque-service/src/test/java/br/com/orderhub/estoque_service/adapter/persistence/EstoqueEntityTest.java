@@ -1,85 +1,53 @@
 package br.com.orderhub.estoque_service.adapter.persistence;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Testes Unitários da Entidade EstoqueEntity")
-class EstoqueEntityTest {
+public class EstoqueEntityTest {
 
     @Test
-    @DisplayName("Deve definir as datas de criação e atualização ao persistir")
-    void deveDefinirDatasAoPersistir() throws InterruptedException {
-        // Arrange
-        EstoqueEntity estoque = new EstoqueEntity();
+    void deveConstruirEntidadeComIdEQuantidade() {
+        EstoqueEntity entity = new EstoqueEntity(1L, 100);
 
-        // Act
-        estoque.prePersist();
-        LocalDateTime tempoAposPrePersist = LocalDateTime.now();
-
-
-        // Assert
-        assertNotNull(estoque.getCriadoEm(), "A data de criação não deve ser nula");
-        assertNotNull(estoque.getAtualizadoEm(), "A data de atualização não deve ser nula");
-        assertEquals(estoque.getCriadoEm(), estoque.getAtualizadoEm(), "As datas de criação e atualização devem ser iguais na inserção");
-        
-        // Garante que a data foi gerada recentemente
-        assertTrue(estoque.getCriadoEm().isBefore(tempoAposPrePersist.plusSeconds(1)));
+        assertEquals(1L, entity.getIdProduto());
+        assertEquals(100, entity.getQuantidadeDisponivel());
+        assertNull(entity.getCriadoEm());
+        assertNull(entity.getAtualizadoEm());
     }
 
     @Test
-    @DisplayName("Deve atualizar a data de atualização ao dar update")
-    void deveAtualizarDataAoDarUpdate() throws InterruptedException {
-        // Arrange
-        EstoqueEntity estoque = new EstoqueEntity();
-        
-        // Simula a persistência inicial
-        estoque.prePersist();
-        LocalDateTime dataCriacao = estoque.getCriadoEm();
+    void deveExecutarPrePersistComSucesso() {
+        EstoqueEntity entity = new EstoqueEntity();
+        entity.prePersist();
 
-        // Garante um intervalo de tempo para a atualização ser diferente
-        Thread.sleep(10); 
-
-        // Act
-        estoque.preUpdate();
-        LocalDateTime dataAtualizacao = estoque.getAtualizadoEm();
-
-        // Assert
-        assertNotNull(dataAtualizacao, "A data de atualização não deve ser nula");
-        assertEquals(dataCriacao, estoque.getCriadoEm(), "A data de criação não deve ser alterada no update");
-        assertNotEquals(dataCriacao, dataAtualizacao, "A data de atualização deve ser diferente da data de criação");
-        assertTrue(dataAtualizacao.isAfter(dataCriacao), "A data de atualização deve ser posterior à data de criação");
+        assertNotNull(entity.getCriadoEm());
+        assertNotNull(entity.getAtualizadoEm());
+        assertEquals(entity.getCriadoEm(), entity.getAtualizadoEm());
     }
 
     @Test
-    @DisplayName("Deve testar os construtores e o builder gerados pelo Lombok")
-    void deveTestarConstrutoresELombok() {
-        // Arrange
-        LocalDateTime agora = LocalDateTime.now();
+    void deveExecutarPreUpdateComSucesso() {
+        EstoqueEntity entity = new EstoqueEntity();
+        entity.setCriadoEm(LocalDateTime.now().minusDays(1));
+        entity.setAtualizadoEm(LocalDateTime.now().minusDays(1));
 
-        // Act: Testando o AllArgsConstructor e Setters
-        EstoqueEntity estoque1 = new EstoqueEntity(1L, 100, agora, agora);
-        estoque1.setId(2L); // Testa o setter
-        estoque1.setQuantidadeDisponivel(200);
+        entity.preUpdate();
 
-        // Act: Testando o Builder
-        EstoqueEntity estoque2 = EstoqueEntity.builder()
-                .id(3L)
-                .quantidadeDisponivel(300)
-                .criadoEm(agora)
-                .atualizadoEm(agora)
+        assertNotNull(entity.getAtualizadoEm());
+        assertTrue(entity.getAtualizadoEm().isAfter(entity.getCriadoEm()));
+    }
+
+    @Test
+    void deveUsarBuilderCorretamente() {
+        EstoqueEntity entity = EstoqueEntity.builder()
+                .idProduto(2L)
+                .quantidadeDisponivel(50)
                 .build();
-        
-        String toString = estoque2.toString(); // Apenas para cobertura do método toString() se existir
 
-        // Assert
-        assertNotNull(estoque1);
-        assertNotNull(estoque2);
-        assertEquals(2L, estoque1.getId());
-        assertEquals(200, estoque1.getQuantidadeDisponivel());
-        assertEquals(3, estoque2.getId());
+        assertEquals(2L, entity.getIdProduto());
+        assertEquals(50, entity.getQuantidadeDisponivel());
     }
 }

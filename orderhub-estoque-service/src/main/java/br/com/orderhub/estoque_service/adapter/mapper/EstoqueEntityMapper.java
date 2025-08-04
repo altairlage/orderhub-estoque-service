@@ -9,20 +9,10 @@ import org.springframework.stereotype.Component;
 public class EstoqueEntityMapper {
 
     public Estoque toDomain(EstoqueEntity entity) {
-        return Estoque.builder()
-                .id(entity.getId())
-                .quantidadeDisponivel(entity.getQuantidadeDisponivel())
-                .criadoEm(entity.getCriadoEm())
-                .atualizadoEm(entity.getAtualizadoEm())
-                .build();
+        return new Estoque(entity.getIdProduto(), entity.getQuantidadeDisponivel());
     }
 
     public EstoqueEntity toEntity(Estoque estoque) {
-        return EstoqueEntity.builder()
-                .id(estoque.getId()) 
-                .quantidadeDisponivel(estoque.getQuantidadeDisponivel())
-                .criadoEm(estoque.getCriadoEm())
-                .atualizadoEm(estoque.getAtualizadoEm())
-                .build();
+        return new EstoqueEntity(estoque.getIdProduto(), estoque.getQuantidadeDisponivel());
     }
 }

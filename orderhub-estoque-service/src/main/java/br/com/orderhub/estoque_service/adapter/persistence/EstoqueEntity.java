@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 public class EstoqueEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Chave primária do banco
+    @Column(name = "id_produto", nullable = false)
+    private Long idProduto;
 
     @Column(name = "quantidade_disponivel", nullable = false)
     private Integer quantidadeDisponivel;
@@ -36,5 +36,10 @@ public class EstoqueEntity {
     @PreUpdate
     public void preUpdate() {
         this.atualizadoEm = LocalDateTime.now();
+    }
+
+    public EstoqueEntity(Long idProduto, Integer quantidadeDisponivel) {
+        this.idProduto = idProduto;
+        this.quantidadeDisponivel = quantidadeDisponivel;
     }
 }

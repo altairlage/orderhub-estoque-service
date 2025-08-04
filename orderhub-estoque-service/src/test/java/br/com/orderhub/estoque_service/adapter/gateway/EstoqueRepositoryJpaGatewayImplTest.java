@@ -5,129 +5,111 @@ import br.com.orderhub.estoque_service.adapter.mapper.EstoqueEntityMapper;
 import br.com.orderhub.estoque_service.adapter.persistence.EstoqueEntity;
 import br.com.orderhub.estoque_service.adapter.persistence.EstoqueRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-@DisplayName("Testes Unitários do EstoqueRepositoryJpaGatewayImpl")
-class EstoqueRepositoryJpaGatewayImplTest {
+public class EstoqueRepositoryJpaGatewayImplTest {
 
-    @Mock
     private EstoqueRepository estoqueRepository;
-
-    @Mock
     private EstoqueEntityMapper mapper;
-
-    @InjectMocks
-    private EstoqueRepositoryJpaGatewayImpl estoqueGateway;
-
-    private Estoque estoqueDominio;
-    private EstoqueEntity estoqueEntidade;
+    private EstoqueRepositoryJpaGatewayImpl gateway;
 
     @BeforeEach
-    void setUp() {
-        estoqueDominio = Estoque.builder().id(1L).quantidadeDisponivel(100).build();
-        estoqueEntidade = EstoqueEntity.builder().id(1L).quantidadeDisponivel(100).build();
+    void setup() {
+        estoqueRepository = mock(EstoqueRepository.class);
+        mapper = mock(EstoqueEntityMapper.class);
+        gateway = new EstoqueRepositoryJpaGatewayImpl(estoqueRepository, mapper);
     }
 
     @Test
-    @DisplayName("Deve buscar por ID e encontrar um estoque")
-    void deveBuscarPorIdComSucesso() {
-        // Arrange
-        when(estoqueRepository.findById(1L)).thenReturn(Optional.of(estoqueEntidade));
-        when(mapper.toDomain(estoqueEntidade)).thenReturn(estoqueDominio);
+    void deveSalvarEstoqueComSucesso() {
+        Estoque estoque = new Estoque(1L, 10);
+        EstoqueEntity entity = new EstoqueEntity(1L, 10);
 
-        // Act
-        Optional<Estoque> resultado = estoqueGateway.buscarPorId(1L);
+        when(mapper.toEntity(estoque)).thenReturn(entity);
+        when(estoqueRepository.save(entity)).thenReturn(entity);
+        when(mapper.toDomain(entity)).thenReturn(estoque);
 
-        // Assert
-        assertTrue(resultado.isPresent());
-        assertEquals(estoqueDominio.getId(), resultado.get().getId());
-        verify(estoqueRepository).findById(1L);
-        verify(mapper).toDomain(estoqueEntidade);
+        Estoque result = gateway.salvar(estoque);
+
+        assertEquals(estoque, result);
+        verify(estoqueRepository).save(entity);
     }
 
     @Test
-    @DisplayName("Deve buscar por ID e não encontrar um estoque")
-    void deveRetornarVazioAoBuscarPorIdInexistente() {
-        // Arrange
-        when(estoqueRepository.findById(99L)).thenReturn(Optional.empty());
+    void deveAdicionarProdutoNoEstoqueQuandoIdValido() {
+        Estoque estoque = new Estoque(2L, 20);
+        EstoqueEntity entity = new EstoqueEntity(2L, 20);
 
-        // Act
-        Optional<Estoque> resultado = estoqueGateway.buscarPorId(99L);
+        when(mapper.toEntity(estoque)).thenReturn(entity);
+        when(estoqueRepository.save(entity)).thenReturn(entity);
+        when(mapper.toDomain(entity)).thenReturn(estoque);
 
-        // Assert
-        assertTrue(resultado.isEmpty());
-        verify(estoqueRepository).findById(99L);
-        verify(mapper, never()).toDomain(any());
+        Estoque result = gateway.adicionarProdutoNoEstoque(estoque);
+
+        assertEquals(estoque, result);
     }
 
     @Test
-    @DisplayName("Deve buscar por múltiplos IDs com sucesso")
-    void deveBuscarPorIdsComSucesso() {
-        // Arrange
-        when(estoqueRepository.findAllById(List.of(1L))).thenReturn(List.of(estoqueEntidade));
-        when(mapper.toDomain(estoqueEntidade)).thenReturn(estoqueDominio);
+    void deveRemoverProdutoDoEstoque() {
+        gateway.removerProdutoNoEstoque(3L);
 
-        // Act
-        List<Estoque> resultado = estoqueGateway.buscarPorIds(List.of(1L));
-
-        // Assert
-        assertFalse(resultado.isEmpty());
-        assertEquals(1, resultado.size());
-        assertEquals(estoqueDominio.getId(), resultado.get(0).getId());
-    }
-    
-    @Test
-    @DisplayName("Deve retornar lista vazia ao buscar por múltiplos IDs inexistentes")
-    void deveRetornarListaVaziaAoBuscarPorIdsInexistentes() {
-        // Arrange
-        when(estoqueRepository.findAllById(anyList())).thenReturn(Collections.emptyList());
-
-        // Act
-        List<Estoque> resultado = estoqueGateway.buscarPorIds(List.of(99L, 100L));
-
-        // Assert
-        assertTrue(resultado.isEmpty());
+        verify(estoqueRepository).deleteById(3L);
     }
 
     @Test
-    @DisplayName("Deve retornar lista vazia ao buscar por uma lista de IDs vazia")
-    void deveRetornarListaVaziaAoBuscarPorListaDeIdsVazia() {
-        // Arrange
-        when(estoqueRepository.findAllById(Collections.emptyList())).thenReturn(Collections.emptyList());
+    void deveConsultarEstoquePorIdValido() {
+        EstoqueEntity entity = new EstoqueEntity(4L, 15);
+        Estoque estoque = new Estoque(4L, 15);
 
-        // Act
-        List<Estoque> resultado = estoqueGateway.buscarPorIds(Collections.emptyList());
+        when(estoqueRepository.findById(4L)).thenReturn(Optional.of(entity));
+        when(mapper.toDomain(entity)).thenReturn(estoque);
 
-        // Assert
-        assertTrue(resultado.isEmpty());
-        verify(estoqueRepository).findAllById(Collections.emptyList());
-        verify(mapper, never()).toDomain(any());
+        Estoque result = gateway.consultarEstoquePorIdProduto(4L);
+
+        assertEquals(estoque, result);
     }
 
     @Test
-    @DisplayName("Deve salvar um estoque com sucesso")
-    void deveSalvarComSucesso() {
-        // Arrange
-        when(mapper.toEntity(estoqueDominio)).thenReturn(estoqueEntidade);
+    void naoDeveConsultarEstoqueComIdInvalido() {
+        Estoque result = gateway.consultarEstoquePorIdProduto(0L);
 
-        // Act
-        estoqueGateway.salvar(estoqueDominio);
+        assertNull(result);
+        verifyNoInteractions(estoqueRepository);
+    }
 
-        // Assert
-        verify(mapper).toEntity(estoqueDominio);
-        verify(estoqueRepository).save(estoqueEntidade);
+    @Test
+    void deveBaixarEstoqueComSucesso() {
+        Estoque request = new Estoque(101L, 10);
+        EstoqueEntity entity = new EstoqueEntity(101L, 50);
+        EstoqueEntity atualizado = new EstoqueEntity(101L, 40);
+        Estoque esperado = new Estoque(101L, 40);
+
+        when(estoqueRepository.findById(101L)).thenReturn(Optional.of(entity));
+        when(mapper.toDomain(atualizado)).thenReturn(esperado);
+        when(mapper.toDomain(any())).thenReturn(esperado);
+        when(mapper.toEntity(any())).thenReturn(entity);
+        when(estoqueRepository.save(any())).thenReturn(atualizado);
+
+        Estoque result = gateway.baixarEstoque(request);
+
+        assertNotNull(result);
+        assertEquals(40, result.getQuantidadeDisponivel());
+    }
+
+    @Test
+    void naoDeveBaixarEstoqueSeQuantidadeInsuficiente() {
+        Estoque estoque = new Estoque(6L, 20);
+        EstoqueEntity entity = new EstoqueEntity(6L, 10);
+
+        when(estoqueRepository.findById(6L)).thenReturn(Optional.of(entity));
+
+        Estoque result = gateway.baixarEstoque(estoque);
+
+        assertNull(result);
     }
 }

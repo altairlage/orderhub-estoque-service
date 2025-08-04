@@ -22,6 +22,10 @@ public class OrderhubExceptionHandler {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
         }
 
+        if (ex instanceof br.com.orderhub.core.exceptions.ProdutoJaCadastradoNoEstoqueException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+        }
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
