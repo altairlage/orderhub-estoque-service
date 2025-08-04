@@ -46,7 +46,7 @@ public class EstoqueApiControllerTest {
 
         ResponseEntity<EstoqueDTO> response = apiController.baixarEstoque(1L, requestDto);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedResponse, response.getBody());
 
         verify(mockController).baixarEstoque(new AtualizarEstoqueDTO(1L, 5));
@@ -60,7 +60,7 @@ public class EstoqueApiControllerTest {
 
         ResponseEntity<EstoqueDTO> response = apiController.consultarEstoquePorIdProduto(1L);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedResponse, response.getBody());
 
         verify(mockController).consultarEstoquePorIdProduto(1L);
@@ -75,7 +75,7 @@ public class EstoqueApiControllerTest {
 
         ResponseEntity<EstoqueDTO> response = apiController.adicionarProdutoNoEstoque(dto);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedResponse, response.getBody());
 
         verify(mockController).adicionarProdutoNoEstoque(dto);
