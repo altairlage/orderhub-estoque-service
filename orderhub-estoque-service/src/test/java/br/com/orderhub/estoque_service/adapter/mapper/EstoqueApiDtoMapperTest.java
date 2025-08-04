@@ -1,0 +1,46 @@
+package br.com.orderhub.estoque_service.adapter.mapper;
+
+import br.com.orderhub.core.domain.entities.Estoque;
+import br.com.orderhub.estoque_service.adapter.dto.EstoqueApiResponseDto;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@DisplayName("Testes Unitários do EstoqueApiDtoMapper")
+class EstoqueApiDtoMapperTest {
+
+    private EstoqueApiDtoMapper mapper;
+
+    @BeforeEach
+    void setUp() {
+        mapper = new EstoqueApiDtoMapper();
+    }
+
+    @Test
+    @DisplayName("Deve mapear de Entidade de Domínio para DTO de Resposta da API")
+    void deveMapearDomainParaResponseDto() {
+        // Arrange
+        LocalDateTime agora = LocalDateTime.now();
+        Estoque domain = Estoque.builder()
+                .id(1L)
+                .quantidadeDisponivel(120)
+                .criadoEm(agora)
+                .atualizadoEm(agora)
+                .build();
+        
+        // Act
+        EstoqueApiResponseDto responseDto = mapper.toResponse(domain);
+        
+        // Assert
+        assertNotNull(responseDto);
+        assertEquals(domain.getId(), responseDto.idProduto()); // <-- ALTERADO
+        assertEquals(domain.getQuantidadeDisponivel(), responseDto.quantidadeDisponivel());
+        assertEquals(domain.getCriadoEm(), responseDto.criadoEm());
+        assertEquals(domain.getAtualizadoEm(), responseDto.atualizadoEm());
+    }
+}
